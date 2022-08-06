@@ -28,7 +28,6 @@ func newBloomFilter(capacity int, falsePositiveRate float64) *BloomFilter {
 
 func (bloomFilter *BloomFilter) Put(key model.Slice) error {
 	indices := bloomFilter.keyIndices(key)
-
 	for index := 0; index < len(indices); index++ {
 		bloomFilter.bitVector.Set(uint(indices[index]))
 	}
@@ -37,7 +36,6 @@ func (bloomFilter *BloomFilter) Put(key model.Slice) error {
 
 func (bloomFilter *BloomFilter) Has(key model.Slice) bool {
 	indices := bloomFilter.keyIndices(key)
-
 	for index := 0; index < len(indices); index++ {
 		if bloomFilter.bitVector.Test(uint(indices[index])) == false {
 			return false
@@ -63,7 +61,7 @@ func (bloomFilter *BloomFilter) keyIndices(key model.Slice) []uint64 {
 	return indices
 }
 
-//Calculate K
+//Calculate numberOfHashFunctions(K)
 func numberOfHashFunctions(falsePositiveRate float64) int {
 	return int(math.Ceil(math.Log2(1.0 / falsePositiveRate)))
 }
