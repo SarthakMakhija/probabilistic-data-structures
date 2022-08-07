@@ -3,8 +3,13 @@ Repository for an article series on probabilistic data structures including Skip
 
 [![Actions Status](https://github.com/SarthakMakhija/probabilistic-data-structures/workflows/ProbabilisticDataStructures/badge.svg)](https://github.com/SarthakMakhija/probabilistic-data-structures/actions)
 
-- [X] Skiplist
+**Membership**
 - [X] Bloom filter
 - [ ] Counting bloom filter
+
+**Frequency**
 - [ ] Count Sketch
 - [X] Count Min Sketch
+
+**Miscellaneous**
+- [X] Skiplist
