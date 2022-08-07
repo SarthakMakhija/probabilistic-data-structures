@@ -7,4 +7,4 @@ Repository for an article series on probabilistic data structures including Skip
 - [X] Bloom filter
 - [ ] Counting bloom filter
 - [ ] Count Sketch
-- [ ] Count Min Sketch
+- [X] Count Min Sketch
