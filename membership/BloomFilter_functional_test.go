@@ -7,7 +7,7 @@ import (
 )
 
 func TestAdds500KeysAndChecksForTheirPositiveExistence(t *testing.T) {
-	bloomFilter := newBloomFilter(500, 0.001)
+	bloomFilter := newBloomFilter(5000, 0.1)
 
 	keyUsing := func(count int) model.Slice {
 		return model.NewSlice([]byte("Key-" + strconv.Itoa(count)))
@@ -25,17 +25,17 @@ func TestAdds500KeysAndChecksForTheirPositiveExistence(t *testing.T) {
 }
 
 func TestAdds500KeysAndChecksForTheExistenceOfMissingKeys(t *testing.T) {
-	bloomFilter := newBloomFilter(500, 0.01)
+	bloomFilter := newBloomFilter(5000, 0.1)
 
 	keyUsing := func(count int) model.Slice {
 		return model.NewSlice([]byte("Key-" + strconv.Itoa(count)))
 	}
-	for count := 1; count <= 5; count++ {
+	for count := 1; count <= 500; count++ {
 		_ = bloomFilter.Put(keyUsing(count))
 	}
 
 	falsePositives := 0
-	for count := 1; count <= 5; count++ {
+	for count := 1; count <= 500; count++ {
 		contains := bloomFilter.Has(keyUsing(count * 600))
 		if contains == true {
 			falsePositives = falsePositives + 1
