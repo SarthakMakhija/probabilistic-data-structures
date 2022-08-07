@@ -9,6 +9,11 @@ import (
 
 const depth = 4
 
+/**
+Uses 4 bit counter. lower 4 bits are kept for odd values and higher 4 bits for even values
+Refers: https://github.com/dgryski/go-tinylfu/blob/master/cm4.go
+*/
+
 type CountMinSketch struct {
 	matrix [depth]row
 	seeds  [depth]uint64
