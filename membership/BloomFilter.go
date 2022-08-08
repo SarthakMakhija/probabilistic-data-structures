@@ -30,13 +30,12 @@ func newBloomFilter(capacity int, falsePositiveRate float64) *BloomFilter {
 	}
 }
 
-func (bloomFilter *BloomFilter) Put(key model.Slice) error {
+func (bloomFilter *BloomFilter) Put(key model.Slice) {
 	indices := bloomFilter.keyIndices(key)
 	for index := 0; index < len(indices); index++ {
 		position, mask := bloomFilter.bitPositionInByte(indices[index])
 		bloomFilter.byteVector[position] = bloomFilter.byteVector[position] | mask
 	}
-	return nil
 }
 
 func (bloomFilter *BloomFilter) Has(key model.Slice) bool {
