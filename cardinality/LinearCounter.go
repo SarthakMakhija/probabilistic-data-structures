@@ -16,7 +16,7 @@ func newLinearCounter(size int) *LinearCounter {
 	byteVector := newByteVector(size)
 	return &LinearCounter{
 		byteVector:    byteVector,
-		bitVectorSize: byteVector.bitSize(),
+		bitVectorSize: byteVector.allBitsSize(),
 	}
 }
 
@@ -48,7 +48,7 @@ func newByteVector(size int) byteVector {
 	return make(byteVector, size/byteSize+1)
 }
 
-func (bVector byteVector) bitSize() int {
+func (bVector byteVector) allBitsSize() int {
 	return len(bVector) * byteSize
 }
 
