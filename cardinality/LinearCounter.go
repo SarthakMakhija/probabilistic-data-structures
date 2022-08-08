@@ -29,7 +29,7 @@ func (linearCounter LinearCounter) Put(key model.Slice) {
 
 func (linearCounter LinearCounter) Count() int {
 	setBitCount := linearCounter.byteVector.countSetBits()
-	if setBitCount == 0 || setBitCount == 1 {
+	if setBitCount == 0 || setBitCount == 1 || setBitCount == linearCounter.bitVectorSize {
 		return setBitCount
 	}
 	estimation := math.Log(float64(linearCounter.bitVectorSize-setBitCount)) -
