@@ -11,7 +11,7 @@ Repository for an article series on probabilistic data structures including Skip
 - [ ] Count Sketch
 - [X] Count Min Sketch
 
-**Cardinatlity**
+**Cardinality**
 - [X] Linear counter
 
 **Miscellaneous**
