@@ -10,7 +10,7 @@ import (
 const depth = 4
 
 /**
-Uses 4 bit counter. lower 4 bits are kept for odd values and higher 4 bits for even values
+Uses 4 bit counter. lower 4 bits are kept for even values and higher 4 bits for odd values
 Refers: https://github.com/dgryski/go-tinylfu/blob/master/cm4.go
 */
 
