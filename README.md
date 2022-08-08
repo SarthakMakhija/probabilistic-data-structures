@@ -5,7 +5,7 @@ Repository for an article series on probabilistic data structures including Skip
 
 **Membership**
 - [X] Bloom filter
-- [ ] Counting bloom filter
+- [X] Counting bloom filter
 
 **Frequency**
 - [ ] Count Sketch
