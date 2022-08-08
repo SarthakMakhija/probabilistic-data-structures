@@ -23,7 +23,8 @@ func newLinearCounter(size int) *LinearCounter {
 func (linearCounter LinearCounter) Put(key model.Slice) {
 	hash := murmur3.Sum32(key.GetRawContent())
 	index := hash % uint32(linearCounter.bitVectorSize)
-	linearCounter.byteVector.setBitAt(index)
+	bytePosition, mask := linearCounter.byteVector.bitPositionInByte(index)
+	linearCounter.byteVector.setBitAt(bytePosition, mask)
 }
 
 func (linearCounter LinearCounter) Count() int {
@@ -51,8 +52,7 @@ func (bVector byteVector) bitSize() int {
 	return len(bVector) * byteSize
 }
 
-func (bVector byteVector) setBitAt(index uint32) {
-	position, mask := bVector.bitPositionInByte(index)
+func (bVector byteVector) setBitAt(position uint64, mask byte) {
 	bVector[position] = bVector[position] | mask
 }
 
@@ -61,7 +61,7 @@ func (bVector byteVector) countSetBits() int {
 		count := 0
 		for n != 0 {
 			n = n & (n - 1)
-			count++
+			count = count + 1
 		}
 		return count
 	}
