@@ -17,13 +17,15 @@ type CountingBloomFilter struct {
 func newCountingBloomFilter(capacity int, falsePositiveRate float64) *CountingBloomFilter {
 	numberOfHashFunctions := numberOfHashFunctions(falsePositiveRate)
 	bitVectorSize := bitVectorSize(capacity, falsePositiveRate)
+	byteVectorSize := bitVectorSize/byteSize + 1
+	counterVectorSize := (byteVectorSize + (-byteVectorSize & (0x01))) / 2
 
 	return &CountingBloomFilter{
 		capacity:              capacity,
 		numberOfHashFunctions: numberOfHashFunctions,
 		falsePositiveRate:     falsePositiveRate,
-		byteVector:            make(byteVector, bitVectorSize/byteSize+1),
-		counterVector:         make(counterVector, (bitVectorSize/byteSize+1)/2), //even number?
+		byteVector:            make(byteVector, byteVectorSize),
+		counterVector:         make(counterVector, counterVectorSize),
 	}
 }
 
