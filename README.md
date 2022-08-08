@@ -6,6 +6,7 @@ Repository for an article series on probabilistic data structures including Skip
 **Membership**
 - [X] Bloom filter
 - [X] Counting bloom filter
+- [ ] Deleting bloom filter
 
 **Frequency**
 - [ ] Count Sketch
@@ -13,6 +14,7 @@ Repository for an article series on probabilistic data structures including Skip
 
 **Cardinality**
 - [X] Linear counter
+- [ ] Hyperloglog
 
 **Miscellaneous**
 - [X] Skiplist
