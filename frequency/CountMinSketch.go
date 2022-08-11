@@ -15,12 +15,13 @@ Refers: https://github.com/dgryski/go-tinylfu/blob/master/cm4.go
 */
 
 type CountMinSketch struct {
-	matrix [depth]row
-	seeds  [depth]uint64
+	matrix        [depth]row
+	seeds         [depth]uint64
+	totalCounters uint64
 }
 
 func newCountMinSketch(counters int) *CountMinSketch {
-	next2Power := func(counters int64) int64 {
+	nextPowerOf2 := func(counters int64) int64 {
 		counters--
 		counters |= counters >> 1
 		counters |= counters >> 2
@@ -32,8 +33,8 @@ func newCountMinSketch(counters int) *CountMinSketch {
 		return counters
 	}
 
-	source, updatedCounters := rand.New(rand.NewSource(time.Now().UnixNano())), next2Power(int64(counters))
-	countMinSketch := &CountMinSketch{}
+	source, updatedCounters := rand.New(rand.NewSource(time.Now().UnixNano())), nextPowerOf2(int64(counters))
+	countMinSketch := &CountMinSketch{totalCounters: uint64(updatedCounters - 1)}
 
 	for index := 0; index < depth; index++ {
 		countMinSketch.seeds[index] = source.Uint64()
@@ -46,7 +47,7 @@ func (countMinSketch *CountMinSketch) Increment(key model.Slice) {
 	for index := 0; index < depth; index++ {
 		hash := countMinSketch.runHash(key, uint32(countMinSketch.seeds[index]))
 		currentRow := countMinSketch.matrix[index]
-		currentRow.incrementAt(hash % depth)
+		currentRow.incrementAt(hash % countMinSketch.totalCounters)
 	}
 }
 
@@ -55,7 +56,7 @@ func (countMinSketch *CountMinSketch) Estimate(key model.Slice) byte {
 	for index := 0; index < depth; index++ {
 		hash := countMinSketch.runHash(key, uint32(countMinSketch.seeds[index]))
 		currentRow := countMinSketch.matrix[index]
-		if valueAt := currentRow.getAt(hash % depth); valueAt < min {
+		if valueAt := currentRow.getAt(hash % countMinSketch.totalCounters); valueAt < min {
 			min = valueAt
 		}
 	}
