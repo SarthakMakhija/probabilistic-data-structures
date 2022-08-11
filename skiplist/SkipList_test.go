@@ -29,3 +29,13 @@ func TestPutAKeyValueAndAssertsItsExistenceInSkiplist(t *testing.T) {
 		t.Fatalf("Expected key to exist, but it did not. Key was %v", "HDD")
 	}
 }
+
+func TestAssertsTheExistenceOfANonExistingKey(t *testing.T) {
+	memTable := NewSkipList(10, comparator.StringKeyComparator{})
+	key := model.NewSlice([]byte("NonExisting"))
+
+	getResult := memTable.Get(key)
+	if getResult.Exists != false {
+		t.Fatalf("Expected key %v to be missing, but it was existing", key.AsString())
+	}
+}
