@@ -4,7 +4,12 @@ import (
 	"github.com/spaolacci/murmur3"
 	"math"
 	"probabilistic-data-strutcures/skiplist/model"
+	"unsafe"
 )
+
+var aByte byte
+
+const byteSize = int(unsafe.Sizeof(&aByte))
 
 type CountingBloomFilter struct {
 	capacity              int
@@ -12,6 +17,7 @@ type CountingBloomFilter struct {
 	falsePositiveRate     float64
 	byteVector            byteVector
 	counterVector         counterVector
+	bitVectorSize         uint
 }
 
 func newCountingBloomFilter(capacity int, falsePositiveRate float64) *CountingBloomFilter {
@@ -26,6 +32,7 @@ func newCountingBloomFilter(capacity int, falsePositiveRate float64) *CountingBl
 		falsePositiveRate:     falsePositiveRate,
 		byteVector:            make(byteVector, byteVectorSize),
 		counterVector:         make(counterVector, counterVectorSize),
+		bitVectorSize:         uint(byteVectorSize * byteSize),
 	}
 }
 
@@ -76,7 +83,7 @@ func (bloomFilter *CountingBloomFilter) keyIndices(key model.Slice) []uint64 {
 		return hash
 	}
 	indexForHash := func(hash uint64) uint64 {
-		return hash % uint64(bloomFilter.numberOfHashFunctions)
+		return hash % uint64(bloomFilter.bitVectorSize)
 	}
 	for index := 0; index < bloomFilter.numberOfHashFunctions; index++ {
 		hash := runHash(key.GetRawContent(), uint32(index))
