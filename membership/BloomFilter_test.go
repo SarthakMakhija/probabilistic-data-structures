@@ -6,7 +6,7 @@ import (
 )
 
 func TestAddsAKeyWithBloomFilterAndChecksForItsPositiveExistence(t *testing.T) {
-	bloomFilter := newBloomFilter(1, 0.001)
+	bloomFilter := newBloomFilter(20, 0.001)
 
 	key := model.NewSlice([]byte("Company"))
 	bloomFilter.Put(key)
@@ -17,7 +17,7 @@ func TestAddsAKeyWithBloomFilterAndChecksForItsPositiveExistence(t *testing.T) {
 }
 
 func TestAddsAKeyWithBloomFilterAndChecksForTheExistenceOfANonExistingKey(t *testing.T) {
-	bloomFilter := newBloomFilter(1, 0.001)
+	bloomFilter := newBloomFilter(20, 0.001)
 
 	key := model.NewSlice([]byte("Company"))
 	bloomFilter.Put(key)

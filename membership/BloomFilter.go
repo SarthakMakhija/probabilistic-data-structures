@@ -1,21 +1,17 @@
 package membership
 
 import (
+	"github.com/bits-and-blooms/bitset"
 	"github.com/spaolacci/murmur3"
-	"math"
 	"probabilistic-data-strutcures/skiplist/model"
-	"unsafe"
 )
-
-var aByte byte
-
-const byteSize = int(unsafe.Sizeof(&aByte))
 
 type BloomFilter struct {
 	capacity              int
 	numberOfHashFunctions int
 	falsePositiveRate     float64
-	byteVector            []byte
+	bitVector             *bitset.BitSet
+	bitVectorSize         uint
 }
 
 func newBloomFilter(capacity int, falsePositiveRate float64) *BloomFilter {
@@ -26,23 +22,24 @@ func newBloomFilter(capacity int, falsePositiveRate float64) *BloomFilter {
 		capacity:              capacity,
 		numberOfHashFunctions: numberOfHashFunctions,
 		falsePositiveRate:     falsePositiveRate,
-		byteVector:            make([]byte, bitVectorSize/byteSize+1),
+		bitVector:             bitset.New(uint(bitVectorSize)),
+		bitVectorSize:         uint(bitVectorSize),
 	}
 }
 
 func (bloomFilter *BloomFilter) Put(key model.Slice) {
 	indices := bloomFilter.keyIndices(key)
 	for index := 0; index < len(indices); index++ {
-		position, mask := bloomFilter.bitPositionInByte(indices[index])
-		bloomFilter.byteVector[position] = bloomFilter.byteVector[position] | mask
+		position := indices[index]
+		bloomFilter.bitVector.Set(uint(position))
 	}
 }
 
 func (bloomFilter *BloomFilter) Has(key model.Slice) bool {
 	indices := bloomFilter.keyIndices(key)
 	for index := 0; index < len(indices); index++ {
-		position, mask := bloomFilter.bitPositionInByte(indices[index])
-		if bloomFilter.byteVector[position]&mask == 0 {
+		position := indices[index]
+		if !bloomFilter.bitVector.Test(uint(position)) {
 			return false
 		}
 	}
@@ -57,23 +54,11 @@ func (bloomFilter *BloomFilter) keyIndices(key model.Slice) []uint64 {
 		return hash
 	}
 	indexForHash := func(hash uint64) uint64 {
-		return hash % uint64(bloomFilter.numberOfHashFunctions)
+		return hash % uint64(bloomFilter.bitVectorSize)
 	}
 	for index := 0; index < bloomFilter.numberOfHashFunctions; index++ {
 		hash := runHash(key.GetRawContent(), uint32(index))
 		indices = append(indices, indexForHash(hash))
 	}
 	return indices
-}
-
-func (bloomFilter *BloomFilter) bitPositionInByte(keyIndex uint64) (uint64, byte) {
-	quotient, remainder := int64(keyIndex)/int64(byteSize), int64(keyIndex)%int64(byteSize)
-	valueWithMostSignificantBit := int64(math.Pow(2, float64(byteSize)-1)) //128
-	if remainder == 0 {
-		if quotient == 0 {
-			return uint64(quotient), byte(valueWithMostSignificantBit)
-		}
-		return uint64(quotient - 1), byte(valueWithMostSignificantBit)
-	}
-	return uint64(quotient), byte(0x01 << (remainder - 1))
 }
