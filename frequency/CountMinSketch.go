@@ -34,7 +34,7 @@ func newCountMinSketch(counters int) *CountMinSketch {
 	}
 
 	source, updatedCounters := rand.New(rand.NewSource(time.Now().UnixNano())), nextPowerOf2(int64(counters))
-	countMinSketch := &CountMinSketch{totalCounters: uint64(updatedCounters - 1)}
+	countMinSketch := &CountMinSketch{totalCounters: uint64(updatedCounters)}
 
 	for index := 0; index < depth; index++ {
 		countMinSketch.seeds[index] = source.Uint64()

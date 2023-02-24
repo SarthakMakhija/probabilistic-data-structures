@@ -18,7 +18,7 @@ func TestGetTheEstimateForASingleKey(t *testing.T) {
 }
 
 func TestGetTheEstimateForKeyWithMultipleOccurrences(t *testing.T) {
-	countMinSketch := newCountMinSketch(10)
+	countMinSketch := newCountMinSketch(18)
 
 	key := model.NewSlice([]byte("Key"))
 	countMinSketch.Increment(key)
@@ -32,7 +32,7 @@ func TestGetTheEstimateForKeyWithMultipleOccurrences(t *testing.T) {
 }
 
 func TestGetTheEstimateForMultipleKeysWithMultipleOccurrences(t *testing.T) {
-	countMinSketch := newCountMinSketch(10)
+	countMinSketch := newCountMinSketch(22)
 
 	key := model.NewSlice([]byte("Key"))
 	otherKey := model.NewSlice([]byte("Other"))
@@ -67,7 +67,7 @@ func TestGetTheEstimateForKeysInStream(t *testing.T) {
 		"C": 2,
 	}
 
-	countMinSketch := newCountMinSketch(10)
+	countMinSketch := newCountMinSketch(24)
 	for _, key := range stream {
 		countMinSketch.Increment(key)
 	}
